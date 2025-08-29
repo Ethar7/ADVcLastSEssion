@@ -17,18 +17,17 @@ public class Book
         ISBN = isbn;
         Title = title;
         Authors = authors;
-        this.Date = date;   // ✅
+        this.Date = date;   
         Price = price;
     }
 
-    // Helper function to build Authors string manually (بدون join)
     private string BuildAuthors()
     {
         string result = "";
         foreach (var author in Authors)
         {
             if (result.Length > 0)
-                result += " ";   // مسافة واحدة بين الأسماء
+                result += " ";
             result += author;
         }
         return result;
@@ -56,7 +55,7 @@ public class BookFunctions
         foreach (var author in b.Authors)
         {
             if (result.Length > 0)
-                result += " ";   // مسافة واحدة فقط بين الأسماء
+                result += " ";  
             result += author;
         }
         return result;
