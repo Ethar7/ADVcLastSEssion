@@ -1,0 +1,99 @@
+using System;
+using System.Collections.Generic;
+
+public class Book
+{
+    // Properties
+    public string ISBN { get; set; }
+    public string Title { get; set; }
+    public string[] Authors { get; set; }
+    public DateTime Date { get; set; }
+    public decimal Price { get; set; }
+
+    // Constructor
+    public Book(string isbn, string title, string[] authors, DateTime date, decimal price)
+    {
+        ISBN = isbn;
+        Title = title;
+        Authors = authors;
+        this.Date = date;   // ✅
+        Price = price;
+    }
+
+    // Helper function to build Authors string manually (بدون join)
+    private string BuildAuthors()
+    {
+        string result = "";
+        foreach (var author in Authors)
+        {
+            if (result.Length > 0)
+                result += " ";   // مسافة واحدة بين الأسماء
+            result += author;
+        }
+        return result;
+    }
+
+    // Display book info in string form
+    public override string ToString()
+    {
+        return $"[{ISBN}] {Title} - by {BuildAuthors()} | " +
+               $"Published: {Date:dd/MM/yyyy} | Price: {Price} EGP";
+    }
+}
+
+
+public class BookFunctions
+{
+    public static string GetTitle(Book b)
+    {
+        return b.Title;
+    }
+
+    public static string GetAuthors(Book b)
+    {
+        string result = "";
+        foreach (var author in b.Authors)
+        {
+            if (result.Length > 0)
+                result += " ";   // مسافة واحدة فقط بين الأسماء
+            result += author;
+        }
+        return result;
+    }
+
+    public static string GetPrice(Book b)
+    {
+        return $"{b.Price} L.E";
+    }
+}
+
+
+class Program
+{
+    static void Main()
+    {
+        // Sample data
+        var myBooks = new List<Book>()
+        {
+            new Book("A101", "Intro to C#", new[] {"Ahmed", "Sara"}, new DateTime(2020, 6, 1), 220m),
+            new Book("B202", "OOP in Depth", new[] {"Omar"}, new DateTime(2021, 9, 10), 180m),
+            new Book("C303", "C# Advanced", new[] {"Nora", "Ali"}, new DateTime(2019, 12, 25), 300m)
+        };
+
+        Console.WriteLine("Case A: User Defined Function (Title)");
+        foreach (var b in myBooks)
+            Console.WriteLine(BookFunctions.GetTitle(b));
+
+        Console.WriteLine("\nCase B: BCL Delegate Func<Book,string> (Authors)");
+        foreach (var b in myBooks)
+            Console.WriteLine(BookFunctions.GetAuthors(b));
+
+        Console.WriteLine("\nCase C: Anonymous Method (ISBN)");
+        foreach (var b in myBooks)
+            Console.WriteLine((new Func<Book,string>(delegate(Book bk) { return bk.ISBN; }))(b));
+
+        Console.WriteLine("\nCase D: Lambda Expression (Publication Date)");
+        foreach (var b in myBooks)
+            Console.WriteLine((new Func<Book,string>(bk => bk.Date.ToShortDateString()))(b));
+    }
+}
