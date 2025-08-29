@@ -1,0 +1,475 @@
+// ICustumComparer.cs
+
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Demo
+{
+    internal interface ICustomeComparer
+    {
+        bool Compare(int x, int y);
+
+    }
+
+    internal class AscendingComparer : ICustomeComparer
+    {
+        public bool Compare(int x, int y)
+        => x > y;
+    }
+    internal class DescendingComparer : ICustomeComparer
+    {
+        public bool Compare(int x, int y)
+        => x <y;
+    }
+}
+
+//sortingalgorithm.cs
+
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Demo
+{
+    public delegate bool CustomFunc(int arrg1, int arrg2);
+    //lw ndy 2 Deklegate bnfs El Asm
+    public delegate bool CustomFunc<T>(T arrg1, T arrg2);
+    //A3la bl level fl t7sen eltalet
+    //34an m7d4 y3ml  arrg1 of type  TResult We use in in out
+    public delegate TResult CustomFunc<in T1,in T2,out  TResult>(T1 arrg1, T2 arrg2);
+    internal class Sorting_Algorithm<T>
+    {
+        //H7ot this , static 34an A3ml kda fal program arr.BubbleSort
+        //34an THis 3yda 3la el caller
+        public static void BubbleSort( T[] element,/* ICustomeComparer comparer*/ CustomFunc<T, T, bool> func)
+        {
+            if (element != null || func is not null)
+            {
+                for (int i = 0; i < element.Length; i++)
+                {
+                    for (int j = 0; j < element.Length - i - 1; j++)
+                    {
+                        if (func.Invoke(element[j], element[j + 1]))
+                        //if(comparer.Compare(arr[j], arr[j + 1]))
+                            Swap(ref element[j], ref element[j + 1]);
+
+                    }
+                }
+            }
+        
+        }
+        //public static void BubbleSortAsc(int[] arr)
+        //{
+        //    if (arr != null)
+        //    {
+        //        for (int i = 0; i < arr.Length; i++)
+        //        {
+        //            for (int j = 0; j < arr.Length - i - 1; j++)
+        //            {
+        //                if (arr[j] > arr[j + 1])
+
+        //                    Swap(ref arr[j], ref arr[j + 1]);
+
+        //            }
+        //        }
+        //    }
+        //}
+
+
+        //public static void BubbleSortDesc(int[] arr)
+        //{
+        //    if (arr != null)
+        //    {
+        //        for (int i = 0; i < arr.Length; i++)
+        //        {
+        //            for (int j = 0; j < arr.Length - i - 1; j++)
+        //            {
+        //                if (arr[j] < arr[j + 1])
+                        
+        //                    Swap(ref arr[j], ref arr[j + 1]);
+
+        //            }
+        //        }
+        //    }
+        //}
+
+        private static void Swap(ref T i, ref T j)
+        {
+            T temp = i; i = j; j = temp;
+        }
+    }
+    class SortingTypes
+    {
+        public static bool CompareGreaterThan(int x, int y) => x > y;
+        public static bool CompareSmallerThan(int x,int y)=>x<y;
+        public static bool CompareGreaterThan(string x, string y) => x.CompareTo(y)==1;
+            
+        public static bool CompareSmallerThan(string x,string y)=> x.CompareTo(y)==-1;
+    }
+}
+
+// program.cs
+
+﻿using System.ComponentModel;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace Demo
+{
+    public delegate int StringFuncDelegate(string str);
+    //CLR Will Convert to New Class [Delegate]
+    //Can points to 1 or more xfunctions [static or object member function] 
+    //lazm tb'a same Signature [Regardless Function Name And parameter]
+    public delegate bool CustomPredict<in T>(T obj);
+
+    internal class Program
+    {
+        public static Action DoAction()
+        {
+            //return delegate (){ Console.WriteLine("Hello World"); };
+            return () => Console.WriteLine("Hello World");
+            
+        }
+        public static List<T> FindElements<T>(List<T> elements, CustomPredict<T> predict)
+        {
+            List<T>result=new List<T>();
+            if(elements != null)
+            {
+                foreach (T item in elements)
+                {
+                    //if(item%2==1)
+                    if(predict(item))
+                        result.Add(item);
+                }
+            }
+            return result;
+        }
+        //public static List<int> FindOdd(List<int> num)
+        //{
+        //    List<int>result=new List<int>();
+        //    if(num != null)
+        //    {
+        //        foreach (int item in num)
+        //        {
+        //            if(item%2==1)
+        //                result.Add(item);
+        //        }
+        //    }
+        //    return result;
+        //}
+        static void Main(string[] args)
+        {
+
+            #region Common Errors
+            // M3nde4 Functions Kda fl4ar3 lazm tb'a f class
+            //Aw Ast5dm Anonymous Functions
+
+            //int x =50;
+            //Console.WriteLine(x.ToString()); //cout<< 50 w Momkn A3ml Override 3leha Mtnse4 De
+
+            #endregion
+
+
+            #region Delegate
+            ///Delegate is a C# Language Feature
+            ///Concept mwgod fl software 3momn Asmo Delegation
+            ///Has 2 Usages
+            ///1.    Pointer To Function
+            ///2.    Event - (paradim : Driven Programming , paradim : Functional Programming)
+            
+            /*في فيتشرز موجوده فالفانكشان بروجرامينج بس بتفيوليت مباديء الاوبجكت اوريانتيد وفي حاجات لا فا احنا فاللى لا بقي  زي 
+              - strore fumction in variable
+              - Function returns Another Function
+              - passing function as A parameter to Another Function
+             
+             */
+           
+            ///Delgate b7oto f class AW sTRUCT
+            ///El Icon Bt3to "bag" 34AN By4el kza Reference mn Kza Function
+            ///Delgate Byt7wl flcompilation l class fl ill file
+            ///***Lw Ana 48AL b7aga Mfeha4 Delegate Zy Java  bro7 a3ml Implement strategy of Design Paaterns [23] ***/
+            ///------------------------------------------------------------------\\
+            ///0.Delegate Declaration
+            ///1.DeclarE Reference From Delegate
+            ///2.Initialize Refernce From Delegate [Pointer To Function ]
+            ///3.Use Delegate Reference [Call Method]
+            ///------------------------------------------------------------------\\
+
+
+            #region Ex01
+
+            //int y = StringFunctions.GetCountOfUpperChars;//Invaleid
+
+            //1.DeclarE Reference From Delegate
+            //StringFuncDelegate stringFuncDelegate;
+
+
+            ////2.Initialize Refernce From Delegate [Pointer To Function ]
+            //stringFuncDelegate = new StringFuncDelegate( StringFunctions.GetCountOfUpperChars);
+            ////or
+            //stringFuncDelegate = StringFunctions.GetCountOfUpperChars;//Syntax Sugar
+
+
+            ////3.Use Delegate Reference [Call Method]
+            //int res= stringFuncDelegate.Invoke("Alaa Osama");
+            //Console.WriteLine(res);
+
+
+
+
+            ////stringFuncDelegate=StringFunctions.GetCountOfLowerChars;//كدا لغي القديم
+            ////stringFuncDelegate => GetCountOfLowerChars only
+            ////El  + &&  -  m4 mohmtha hna awy hya tban Aktar fl event Programmin Paradim
+            //stringFuncDelegate += StringFunctions.GetCountOfLowerChars;
+            //int res1 = stringFuncDelegate.Invoke("Alaa Osama");
+            //Console.WriteLine(res1);//output 7
+            //// lw ana 3wza Awl W7da 
+
+            //stringFuncDelegate-= StringFunctions.GetCountOfLowerChars;
+            //int res2 = stringFuncDelegate.Invoke("Alaa Osama");
+            //Console.WriteLine(res2); 
+
+            #endregion
+
+            #region Ex02
+
+            /*
+             في المثال دا انا هبدا احسن في الفانكشان بتاعة البابل سورت فا في كل اتريشن هيبقي في تحسين
+
+            _ التحسين الاول: بدل ما اكرر فانكشان البابل سورت مرتين عشان ارتب مره تصاعدي ومره تنازلى هعمله في فانكشان واحده
+            طب دا عملته ازاي ؟
+              Stategy Design Patern
+             روحت عملت انترفيس..
+            
+            _التحسين التاني :اني عاوزه  استخدم الفيتشر اللى عندي لان بردو الديزاين بترن محجمني فا روحت عملت دليجت من اي نوع انا عوزاه عشان اقدر احدد انا عاوزه اسورت ازاي_
+             
+             _التحسين التالت:  انا عاوزه السورت تاخد من اي تايب_
+             */
+
+            ///Example(int)
+            ///int[] arr = { 5,10,8,3,0,3,200,2};
+            ///Stategy Design Patern
+            ///Sorting_Algorithm.BubbleSort(arr,new AscendingComparer());
+            ///Extenstion Method
+            ///arr.BubbleSort(new DescendingComparer());
+            ///Using Delegate
+            ///CustomFunc<int> custom = SortingTypes.CompareGreaterThan;//H5znha f var A7sn 
+            ///Sorting_Algorithm.BubbleSort(arr, custom);
+            ///Another Way
+            ///Sorting_Algorithm.BubbleSort(arr, delegate (int x, int y) { return x < y;  }) ;
+            ///Kda Ana 5leto Genaric LEVEL Elw74
+            ///CustomFunc<int,int,bool> custom = SortingTypes.CompareGreaterThan;//H5znha f var A7sn 
+            ///Sorting_Algorithm<int>.BubbleSort(arr, custom);
+            ///
+            ///foreach (int i in arr)
+            ///    Console.WriteLine(i);
+
+            ///Example(string)
+            ///string[] Names = { "Omar", "Nada", "Ziad", "Mona", "Alaa", "Yaman" };
+            ///
+            ///Sorting_Algorithm<string>.BubbleSort(Names, SortingTypes.CompareSmallerThan);
+            ///foreach (string name in Names)
+            ///{
+            ///    Console.WriteLine(name);
+            ///}
+
+            #endregion
+
+            #region Ex03
+            //List<int>nums =Enumerable.Range(0,100).ToList();//retuens Array Fa 3mlt kda .ToList()
+            //CustomPredict<int> predicate = null;
+            #region Find Odd
+            //3wza aGeb El odd 
+            //predicate = ConditionFunc.IsOdd;
+            //List<int> odds =FindOdd(nums); 
+            #endregion
+
+            #region Find Even
+            //predicate = ConditionFunc.IsEven;
+            //3wza Ageb EleveN tB 3WZA aGEB EL %7  fa yla Delegate 
+            //List<int> odd = FindElements(nums, ConditionFunc.IsEven);
+
+            #endregion
+
+            #region Find Seven
+            //predicate = ConditionFunc.IsEven;
+
+            //List<int> Div = FindElements(nums, ConditionFunc.IsDivBy7); 
+            #endregion
+
+
+
+            //List<string>Names= new List<string>(10) {
+            //    "Ahmed","Amany","Alaa","Ali","Aliaa","Asmaa"
+            //};
+
+            //List<string> NamesWith04 = FindElements<string>(Names, ConditionFunc.IsLengthEquals04);
+
+
+            //foreach (var item in NamesWith04)
+            //{
+            //    Console.WriteLine(item);
+            //} 
+            #endregion
+
+            #region Built-in Delegates
+            /*3 Built In Delegate
+                {Predicate(Ref From Predicate Points On Function that Takes One Parameter Of Any Type And returns Bool) -
+                Func (Ref From Func Points On Function that Takes From 0 to 16 Parameters w lazm treturn 7aga)-
+                Action (Ref From Action Points On Void Function that Takes From 0 to 16 Parameters)}
+            */
+
+            //Da M3nah An El 7ala Elw7eda el h3ml feha delegate lw ana hst'bl Aktar mn 16 parameter
+
+            //Tb le fe  Predicate , W    func Btcover 3leha == 34an bnst3ml predicate kter
+            //azay n4of el overloads bta3 el delegate ?
+            //  view - class view - search on Func
+
+            //el action 3ndy mnha non genaric type take 0 patrameter
+
+            //Predicate<int> predicate= SomeFunctions.Test;
+            //predicate.Invoke(10);//or
+            //predicate(50);
+            //Func<int,string> func = SomeFunctions.Cast;
+            //func.Invoke(10);
+            //func(50);
+            //Action<string> action = SomeFunctions.Print;
+            //action.Invoke("Alaa");
+
+            #endregion
+
+            #region Anonymous Functions vs Lambda Expressions
+
+
+            ///Anonymous Functions {Hst5dmha mra w7da bs aw fl runtime}
+            ///Predicate<int> predicate = /*SomeFunctions.Test*/delegate(int number){ return number > 0; };
+            ///predicate.Invoke(10);//or
+            ///predicate(50);
+            ///Func<int, string> func = /*SomeFunctions.Cast*/delegate (int number) { return number.ToString(); };
+            ///func.Invoke(10);
+            ///func(50);
+            ///Action<string> action = /*SomeFunctions.Print*/ delegate (string name) { Console.WriteLine($"Hello {name}"); };
+            ///action.Invoke("Alaa");
+
+
+            ///Lamda Expression
+            ///Called Fatarrow , Read Goes to
+            ///Predicate<int> predicate =  (int number) => number > 0;
+            ///predicate.Invoke(10);//or
+            ///predicate(50);
+            ///Func<int, string> func =  number=> number.ToString(); 
+            ///func.Invoke(10);
+            ///func(50);
+            ///Action<string> action =  name=> Console.WriteLine($"Hello {name}"); 
+            ///action.Invoke("Alaa");
+
+
+            #endregion
+
+
+
+            #endregion
+
+
+            #region New Features At Delegate using var Keyword
+            ////var -> Implicitly Typed Local Variable
+            //var predicate = (int n) => n > 0;
+            ////Hna Lazm A7ot datatype el n
+            //
+            ////Daynamic datatype unsafe hntklm 3leha fl linq
+
+            #endregion
+
+
+            #region Lists Methods Takes Functions As A parameter
+            //List<int> list=new List<int>() {1,2,3,4,5,3,6,7,8,10 };
+            //H4t8l kda LW aNA M4 hwg3 dma8y b routine el oop
+            //List<int> Odds = FindElements(list, /*ConditionFunc.IsOdd*/x => x % 2 == 1);
+            //List<int> Odds=list.FindAll(x => x%2 == 1); //returns bool
+            //list.Find(x => x % 2 == 1); //returns Awl element satisfy el condition
+            //list.FindLast(x => x % 2 == 1);//returns A5r element satisfy el condition
+            //list.Exists(x => x == 3);
+            //list.ForEach(Hamada =>
+            //{
+            //    Hamada += 10;
+            //});
+
+            //list.RemoveAll(x => x > 5);
+            //foreach (int item in list) { Console.WriteLine(item); } 
+            #endregion
+
+           // DoAction();
+           // DoAction()();
+
+        }
+    }
+    class SomeFunctions
+    {
+        //M4 Hb'a m7taghom Aodam
+        public static bool Test (int number){ return number>0;}
+
+        public static string Cast(int number) { return number.ToString(); }
+
+        public static void Print(string name) { Console.WriteLine($"Hello {name}"); }
+    }
+
+    class ConditionFunc
+    {
+        public static bool IsOdd(int x) =>x%2==1;
+        public static bool IsEven(int x) => x%2==0;
+        public static bool IsDivBy7(int x) => x%7==0;
+
+        public static bool IsLengthEquals04(string name) => name.Length > 4;
+
+    }
+}
+
+//string function
+
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Demo
+{
+    internal class StringFunctions
+    {
+        public static int GetCountOfUpperChars(string Name)
+        {
+            int count = 0;
+            if (Name != null)
+            {
+                for (int i = 0; i < Name.Length; i++)
+                {
+                    if (char.IsUpper(Name[i]))
+                        count++;
+                }
+            }
+            return count;
+        }
+        public static int GetCountOfLowerChars(string Name)
+        {
+            int count = 0;
+            if (Name != null)
+            {
+                for (int i = 0; i < Name.Length; i++)
+                {
+                    if (char.IsLower(Name[i]))
+                        count++;
+                }
+            }
+            return count;
+        }
+    }
+}
+
+
+
+
