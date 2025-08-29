@@ -80,19 +80,19 @@ class Program
             new Book("C303", "C# Advanced", new[] {"Nora", "Ali"}, new DateTime(2019, 12, 25), 300m)
         };
 
-        Console.WriteLine("Case A: User Defined Function (Title)");
+        Console.WriteLine("==================================================");
         foreach (var b in myBooks)
             Console.WriteLine(BookFunctions.GetTitle(b));
 
-        Console.WriteLine("\nCase B: BCL Delegate Func<Book,string> (Authors)");
+        Console.WriteLine("\n================================================");
         foreach (var b in myBooks)
             Console.WriteLine(BookFunctions.GetAuthors(b));
 
-        Console.WriteLine("\nCase C: Anonymous Method (ISBN)");
+        Console.WriteLine("\n================================================");
         foreach (var b in myBooks)
             Console.WriteLine((new Func<Book,string>(delegate(Book bk) { return bk.ISBN; }))(b));
 
-        Console.WriteLine("\nCase D: Lambda Expression (Publication Date)");
+        Console.WriteLine("\n================================================");
         foreach (var b in myBooks)
             Console.WriteLine((new Func<Book,string>(bk => bk.Date.ToShortDateString()))(b));
     }
